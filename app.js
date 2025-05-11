@@ -2,6 +2,19 @@ const express = require("express");
 const app = express();
 //porta
 const port = 3000;
+
+//middlewares
+const notFound = require("./middlewares/notFound");
+const handleError = require("./middlewares/handleError");
+
+app.get("/", (req, res) => {
+  res.send("Prima Pagina WebApp");
+});
+
+//500
+app.use(handleError);
+//404
+app.use(notFound);
 //avvio server
 app.listen(port, () => {
   console.log(`web app on port ${port}`);
