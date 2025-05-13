@@ -1,4 +1,4 @@
-function handleError(err, _, res) {
+function handleError(err, req, res, next) {
   res.status(500);
   res.json({
     errorStatus: 500,
