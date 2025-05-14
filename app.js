@@ -3,9 +3,11 @@ const app = express();
 //porta
 const port = process.env.PORT;
 const cors = require("cors");
+
 //middlewares
 const notFound = require("./middlewares/notFound");
 const handleError = require("./middlewares/handleError");
+const movies = require("./routers/movies");
 
 app.use(
   cors({
@@ -19,7 +21,7 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("Prima Pagina WebApp");
 });
-
+app.use("/film", movies);
 //500
 app.use(handleError);
 //404

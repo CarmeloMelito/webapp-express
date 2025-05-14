@@ -31,13 +31,31 @@ function index(req, res) {
 function show(req, res) {
   const id = req.params.id;
 
-  const sql = "SELECT * FROM movies WHERE id = ?";
+  const sql = `
+    SELECT movies.*, ROUND(AVG(reviews.vote), 2) AS vote_review
+    FROM movies
+    LEFT JOIN reviews ON movies.id = reviews.movie_id
+    WHERE movies.id = ?`;
 
-  connection.query(sql, [id], (err, results) => {
-    if (err) return res.status(500).json({ error: "Database non trovato" });
-    if (results.length === 0)
+  const sqlrecensioni = `
+    SELECT reviews.*
+    FROM reviews
+    WHERE movie_id = ?
+    `;
+  connection.query(sql, [id], (err, filmsResults) => {
+    if (err) return res.status(500).json({ error: "Databasenon trovato" });
+    if (filmsResults.length === 0)
       return res.status(404).json({ error: "film non trovato" });
-    res.json(results[0]);
+    const film = filmsResults[0];
+
+    connection.query(sqlrecensioni, [id], (err, reviewsResults) => {
+      if (err) return res.status(500).json({ error: "Database non trovato" });
+      film.tags = reviewsResults;
+      res.json({
+        ...film,
+        image: "http://127.0.0.1:3000/" + film.image,
+      });
+    });
   });
 }
 
