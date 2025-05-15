@@ -11,7 +11,7 @@ const movies = require("./routers/movies");
 
 app.use(
   cors({
-    origin: process.env.FE_APP,
+    origin: "http://localhost:5173",
   })
 );
 app.use(express.static("public"));
